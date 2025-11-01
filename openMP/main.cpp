@@ -3,6 +3,7 @@
 #include <vector>
 #include <chrono>
 #include <windows.h>
+#include <thread>
 
 
 using namespace std;
@@ -30,6 +31,11 @@ int main() {
     printf("Hello\n");   
     printf("World\n"); 
 
+
+    // ==========================================================
+    //  ÖRNEK 2: Thread Yönetimi ve ID Kavramı
+    // ==========================================================
+    
     // omp_set_num_threads global bir ayardır yani bundan sonra
     // thread sayımız 4'e sabitlenir. Fakat bundan önceki kodda
     // var olan tüm threadleriniz kullanılmaktaydı.
@@ -63,7 +69,7 @@ int main() {
     
 
     // ==========================================================
-    //  ÖRNEK 2: Static vs Dynamic Schedule Testi
+    //  ÖRNEK 3: Static vs Dynamic Schedule Testi
     // ==========================================================
 
     // Parallel komutu bloktaki her işlemi bütün threadler tarafından
@@ -96,6 +102,10 @@ int main() {
 
     printf("Sum is %d\n", sum);
 
+    // ==========================================================
+    //  ÖRNEK 4: Zaman Ölçümü (omp_get_wtime)
+    // ==========================================================
+
 
     // OpenMP parallel işlemlerde daha güvenli olacak şekilde 
     // tasarlanmış bir monoton artan saat kullanır ve bu saat OS saati ile 
@@ -119,4 +129,80 @@ int main() {
     double end = omp_get_wtime();
 
     printf("Elapsed time = %f seconds\n", end - start);
+
+    // ==========================================================
+    //  ÖRNEK 5: Senkronizasyon Mekanizmaları
+    // ==========================================================
+
+    // Barrier tüm threadlerin belirli bir yere ulaşmadan geçmesini
+    // engeller
+
+    auto work = [](int n) {
+        if (n % 1000 == 0)
+            this_thread::sleep_for(milliseconds(100));
+    };
+
+    #pragma omp parallel
+    {
+        int id = omp_get_thread_num();
+        work(id);
+        #pragma omp barrier
+        if (id == 0) 
+            printf("All threads finished work \n");
+    }
+
+    // Burada race condition görülmesi için bir paralel döngü
+    // yazıyoruz.
+    int total = 0;
+    int N = 100000000;
+    vector<int> data(N, 5);
+
+    #pragma omp parallel for
+    for (int i = 0; i < N; i++) {
+        total += data[i];
+    }
+
+    printf("Total after non-atomic: %d\n", total);
+
+    total = 0;
+    // Critical
+    // Aynı anda sadece bir thread bu bloğu çalıştırır (mutex gibi).
+    start = omp_get_wtime();
+    #pragma omp parallel for
+    for (int i = 0; i < N; i++) {
+        #pragma omp critical
+        total += data[i];
+    }
+    end = omp_get_wtime();
+
+    printf("Total after critical: %d total time: %f\n", total, end - start);
+
+    total = 0;
+    // Atomic
+    // Tek bir değişken güncellenecekse critical yerine daha hızlıdır.
+    start = omp_get_wtime();
+    #pragma omp parallel for
+    for (int i = 0; i < N; i++) {
+        #pragma omp atomic
+        total += data[i];
+    }
+    end = omp_get_wtime();
+
+    printf("Total after atomic: %d total time: %f\n", total, end - start);
+
+
+    // reduction ise atomic counter veya locklama yapmadan direkt 
+    // olarak her thread için bir lokal değişken oluşturup sonrasında ise
+    // onları birleştirir.
+    // Birleştirme türlere ayrılır alttaki örenkte sonuçlar toplanır
+    // ama istersek *, -, &, max, min operasyonları da kullanılabilir.
+    sum = 0;
+    start = omp_get_wtime();
+    #pragma omp parallel for reduction(+:sum)
+    for (int i = 0; i < N; i++) {
+        sum += data[i];
+    }
+    end = omp_get_wtime();
+
+    printf("Total after reduction: %d total time: %f\n", total, end - start);
 }
