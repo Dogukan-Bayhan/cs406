@@ -43,6 +43,11 @@ int main() {
         printf("World\n");
     }
 
+    // omp_get_num_threads ile kaç thread çalıştığına bakılabilir
+    #pragma omp parallel
+    {
+        printf("Thread %d of %d\n", omp_get_thread_num(), omp_get_num_threads());
+    }
     // OpenMP her threade bir sayı atar ama bu operating systemdan
     // gelen threadid değildir. 
     // Thread id ye ulaşmak için işletim sisteminin kendi
