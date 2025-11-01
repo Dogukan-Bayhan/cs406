@@ -204,5 +204,31 @@ int main() {
     }
     end = omp_get_wtime();
 
-    printf("Total after reduction: %d total time: %f\n", total, end - start);
+    printf("Total after reduction: %d total time: %f\n", sum, end - start);
+
+    // ==========================================================
+    //  ÖRNEK 6: Değişken Görünürlüğü
+    // ==========================================================
+
+    // OpenMp de bir paralel işlem yaparken normalde
+    // runtime da kendisi değişkenin private mi shared mi
+    // olacağına karar verir ve bu istenmeyen davranışlara 
+    // sebep verebilir. Bu yüzden bütün paralelleştirdiğiniz
+    // kısımların değişkenlerin türlerini açıkça belirtirseniz
+    // hem istenmeyen davranışları azaltır hem de hataları önceden
+    // tespit edebilirsiniz.
+
+    // default(none) kullanma sebebimizde değişkenlerin private mi
+    // shared mi olduğunu belirtmediğimiz sürece default bir türle 
+    // başlatmamasını istememizdir.
+    sum = 0;
+    int arr[2] = {1};
+    #pragma omp parallel default(none) shared(arr, N) reduction(+:sum) num_threads(2)
+    {
+        int id = omp_get_thread_num();
+        for(int i = 0; i < N; i++) {
+            sum += arr[id];
+        }
+    } 
+    
 }
