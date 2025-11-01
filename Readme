@@ -1,0 +1,45 @@
+# Parallel Computing Practice Repository  
+### Learn | Experiment | Benchmark  
+
+---
+
+## English
+
+This repository is dedicated to learning and experimenting with **Parallel Computing** concepts.  
+It includes various examples written in **C++ (with OpenMP, Pthreads, and more)** that demonstrate how computation can be parallelized to achieve higher performance.
+
+Each piece of code is **clearly explained**, focusing on understanding the core principles such as:
+
+1. **Thread creation and synchronization**  
+2. **Data parallelism vs. task parallelism**  
+3. **Performance measurement and benchmarking**  
+4. **Cache efficiency and false sharing**  
+5. **Load balancing and scalability**
+
+Over time, more examples will be added — from simple parallel loops to advanced concepts like **distributed memory** and **GPU computing**.
+
+> Feel free to explore, learn, and contribute if you’d like!  
+> Each experiment here is part of an ongoing journey to better understand how computers think in parallel.
+
+---
+
+## 🇹🇷 Türkçe
+
+Bu repo, **Parallel Computing (Paralel Hesaplama)** konusunu öğrenmek ve deneyimlemek amacıyla oluşturulmuştur.  
+İçerisinde **C++ (özellikle OpenMP, Pthreads vb.)** kullanılarak yazılmış birçok örnek bulunmaktadır.
+
+Her kod parçası **detaylı açıklamalarla** birlikte sunulmuştur.  
+Amaç yalnızca çalıştırmak değil, aynı zamanda şu temel kavramları **derinlemesine anlamaktır**:
+
+1. **Thread oluşturma ve senkronizasyon**  
+2. **Veri paralelliği ve görev paralelliği**  
+3. **Performans ölçümü ve kıyaslama (benchmarking)**  
+4. **Cache verimliliği ve false sharing**  
+5. **Yük dengeleme ve ölçeklenebilirlik**
+
+Zamanla daha fazla örnek eklenecek — basit döngü paralelleştirmelerinden **dağıtık bellek** ve **GPU hesaplama** konularına kadar.  
+
+> Katkı sağlamak veya örnekleri incelemekten çekinmeyin.  
+> Eklemek istediğiniz bir fikir olursa, hevesle öğrenmek ve geliştirmek isterim!
+
+---
